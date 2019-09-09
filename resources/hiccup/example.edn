@@ -1,0 +1,7 @@
+[:div#root
+  [:div#cards
+    [:div.card
+      [:h1 {:class "card-header"}]
+      [:h1 {:class "card-header"}]
+      [:h1 {:class "card-header"}]
+      [:h1 {:class "card-header"}]]]]
