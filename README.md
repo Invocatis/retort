@@ -36,8 +36,8 @@ Let's create a simple increment/decrement program:
 
 ;=>   [:div#root
 ;       [:input#value {:type :number :value 0}]]
-;       [:button#increment {:on-click ##theincrementfunction} "+"]
-;       [:button#decrement {:on-click ##thedecrementfunction} "-"])
+;       [:button.increment {:on-click ##theincrementfunction} "+"]
+;       [:button.decrement {:on-click ##thedecrementfunction} "-"])
 
 ```
 
