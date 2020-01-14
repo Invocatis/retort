@@ -3,6 +3,13 @@
     [clojure.string :as string]
     [clojure.set :as set]))
 
+(def ^:private function-tag-regex #"(:?\+)([a-zA-Z0-9\-]+)")
+
+(defn- tag->function-tag
+  [tag]
+  (let [[_ _ tag] (->> tag name (re-find function-tag-regex))]
+    (keyword tag)))
+
 (def ^:private html-tag-regex #"^[a-zA-Z0-9\-]+")
 
 (defn- tag->html-tag
@@ -38,10 +45,12 @@
 
 (defn- interpret-single
   [selector]
-  (let [tag (tag->html-tag selector)
+  (let [func (tag->function-tag selector)
+        tag (tag->html-tag selector)
         id (tag->id selector)
         classes (tag->class-set selector)]
     (conj {}
+      (and func [:fn [func]])
       (and tag [:tag [tag]])
       (and id [:id [id]])
       (and classes [:class [classes]]))))

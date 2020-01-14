@@ -33,10 +33,23 @@
   [tag]
   (->> tag name (re-find id-regex) second))
 
+(defn fn-name
+  [f]
+  (last
+    (string/split
+      (when f
+        #?(:clj (.getName (class f))
+           :cljs (.-name f)))
+      #"\$")))
+
 (defn tag
   [hiccup]
-  (when (keyword? (first hiccup))
-    (-> hiccup first tag->html-tag)))
+  (cond
+    (keyword? (first hiccup))
+    (-> hiccup first tag->html-tag)
+    (fn? (first hiccup))
+    (keyword (fn-name (first hiccup)))
+    :else nil))
 
 (defn classes
   [hiccup]

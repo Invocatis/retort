@@ -15,4 +15,5 @@
       [:a.c1 [:a.c2 [:a.c3]]] {:.c1>.c2>.c3 {:a 1}} [:a.c1 {} [:a.c2 {} [:a.c3 {:a 1}]]]
       [:div.class [:div]] {:.class>div {:a 1}} [:div.class {} [:div {:a 1}]]
       [div [:input]] {:.class>input {:a 1}} [:div.class {} [:input {:a 1}]]
-      [div [div [:input]]] {:.class>input {:a 1}} [:div.class {} [:div.class {} [:input {:a 1}]]])))
+      [div [div [:input]]] {:.class>input {:a 1}} [:div.class {} [:div.class {} [:input {:a 1}]]]
+      [:div] {:div {:args [1 2 3]}} [:div {} 1 2 3])))

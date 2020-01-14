@@ -3,8 +3,7 @@
     [retort.inject :refer [inject]]
     [retort.wire :refer [wire]]
     [retort.hiccup :as hiccup]
-    [retort.selector :as selector :refer [selects?]]
-    [retort.util :refer [remove-keys]]))
+    [retort.selector :as selector :refer [selects?]]))
 
 (defn hookup
   [design func hiccup context]
@@ -30,11 +29,9 @@
         (let [evaluated (apply (first hicc) (rest hicc))]
           (brew* design evaluated
             (-> context
-              (assoc :ignore {:data data-used
-                              :transition transition-used})
               (assoc-in [:siblings position] evaluated))))
         ((some-fn keyword? symbol? ifn?) (first hicc))
-        (let [children (hiccup/children hiccup)]
+        (let [children (hiccup/children hicc)]
           (into (subvec hicc 0 2)
             (map-indexed
               (fn [i child]
@@ -42,10 +39,11 @@
                                      :parent context
                                      :siblings children}))
               children)))
-
         :else hiccup))
     hiccup))
 
+(def mem-brew (memoize brew*))
+
 (defn brew
   [design hiccup]
-  (brew* design hiccup {:position 0 :siblings [hiccup]}))
+  (mem-brew design hiccup {:position 0 :siblings [hiccup]}))

@@ -17,7 +17,12 @@
 
 (defn- inject-args
   [data [tag attributes & children :as hiccup]]
-  (into hiccup (get data :args)))
+  (if-let [[_ args] (find data :args)]
+    (into hiccup
+      (if (fn? args)
+        (args attributes)
+        args))
+    hiccup))
 
 (defn inject
   [data [tag attr0 & args0 :as hiccup]]

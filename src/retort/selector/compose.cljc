@@ -1,7 +1,6 @@
 (ns retort.selector.compose
   (:require
-    [retort.selector.grammar :as grammar]
-    [retort.util :refer [html-selector?]]))
+    [retort.selector.grammar :as grammar]))
 
 (defn compose|map
   [m]
@@ -13,9 +12,7 @@
 
 (defn compose|keyword
   [element]
-  (if-not (html-selector? element)
-    [element []]
-    (grammar/interpret element)))
+  (grammar/interpret element))
 
 (defn compose|element
   [element]

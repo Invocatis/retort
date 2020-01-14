@@ -2,7 +2,8 @@
   (:require
     [retort.selector.compose :refer [compose]]
     [retort.hiccup :as hiccup]
-    [motif.core :refer [matches?]]))
+    [motif.core :refer [matches?]]
+    [clojure.string :as string]))
 
 (declare -selects? selects-by-composed?)
 
@@ -14,6 +15,19 @@
       (fn [i child]
         (-selects? selector child (assoc context :position i)))
       children)))
+
+(defn fn-name
+  [f]
+  (last
+    (string/split
+      (when f
+        #?(:clj (.getName (class f))
+           :cljs (.-name f)))
+      #"\$")))
+
+(defn func
+  [[tag] _ func]
+  (and (fn? tag) (= (name func) (fn-name tag))))
 
 (defn tag
   [hiccup _ tag]
@@ -179,7 +193,8 @@
           selectors)))))
 
 (def ^:dynamic selectors
-  {:tag tag
+  {:fn func
+   :tag tag
    :id id
    :class classes
    :parent parent
