@@ -18,7 +18,8 @@
 
 (defn brew*
   [design hiccup {:keys [ignore position parent siblings] :as context}]
-  (if (vector? hiccup)
+  (cond
+    (vector? hiccup)
     (let [hicc (hiccup/clean hiccup)
           [hicc data-used] (hookup (get design :data)
                              inject hicc context)
@@ -40,10 +41,13 @@
                                      :siblings children}))
               children)))
         :else hiccup))
+    (seq? hiccup)
+    (map #(brew* design % context) hiccup)
+    :else
     hiccup))
 
 (def mem-brew (memoize brew*))
 
 (defn brew
   [design hiccup]
-  (mem-brew design hiccup {:position 0 :siblings [hiccup]}))
+  (brew* design hiccup {:position 0 :siblings [hiccup]}))
