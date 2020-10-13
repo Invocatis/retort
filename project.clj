@@ -1,4 +1,4 @@
-(defproject retort "0.1.0"
+(defproject retort "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
@@ -8,7 +8,8 @@
                  [motif "1.0.1"]]
   :plugins [[lein-cljsbuild "1.1.4"]]
   :repl-options {:init-ns user}
-  :cljsbuild {:builds {:main {:source-paths ["src"]
+  :cljsbuild {:dependencies [[reagent "0.8.1"]]
+              :builds {:main {:source-paths ["src"]
                               :compiler {:output-to "browser-based/js/main.js"
                                          :optimizations :whitespace
                                          :pretty-print true}}}}

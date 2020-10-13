@@ -31,7 +31,10 @@
 
 (defn tag
   [hiccup _ tag]
-  (= (hiccup/tag hiccup) tag))
+  (let [htag (hiccup/tag hiccup)]
+    (if (fn? htag)
+      (= (name tag) (fn-name htag))
+      (= htag tag))))
 
 (defn id
   [hiccup _ id]
@@ -43,8 +46,8 @@
 
 (defn parent
   [hiccup {:keys [parent] :as context} selector]
-  (let [{:keys [position siblings] :as ancestor-context} parent]
-    (selects-by-composed? selector (get siblings position) ancestor-context)))
+  (let [{:keys [value] :as ancestor-context} parent]
+    (selects-by-composed? selector value ancestor-context)))
 
 (defn attributes
   [hiccup _ attributes]
@@ -118,7 +121,7 @@
   [hiccup {:keys [siblings]}]
   (= (count siblings) 1))
 
-(defn -empty
+(defn --empty
   [hiccup _]
   (empty? (hiccup/children hiccup)))
 
@@ -193,8 +196,7 @@
           selectors)))))
 
 (def ^:dynamic selectors
-  {:fn func
-   :tag tag
+  {:tag tag
    :id id
    :class classes
    :parent parent
@@ -209,7 +211,7 @@
    :last-child-of-type last-child-of-type
    :only-of-type only-of-type
    :only-child only-child
-   :empty -empty
+   :empty --empty
    :one-child #(n-children %1 %2 1)
    :n-children n-children
    :every-child every-child

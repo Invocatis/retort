@@ -10,6 +10,12 @@
           (dissoc! m! (first ks))
           (recur (rest ks)))))))
 
+(defn multifn?
+  [any]
+  (instance?
+   #?(:clj clojure.lang.MultiFn :cljs MultiFn)
+   any))
+
 (def ^:private html-tags
   #{:a
     :abbr
@@ -130,3 +136,16 @@
   [any]
   (not (and (re-matches #"[a-zA-Z0-9\-]+" (name any))
             (not (contains? html-tags any)))))
+
+#?(:cljs
+   (defn js-map
+     "Makes a javascript map from a clojure one"
+     [cljmap]
+     (let [out (js-obj)]
+       (doall (map #(aset out (name (first %)) (second %)) cljmap))
+       out)))
+
+#?(:cljs
+   (defn jsx->clj
+     [x]
+     (into {} (for [k (.keys js/Object x)] [(keyword k) (aget x k)]))))
